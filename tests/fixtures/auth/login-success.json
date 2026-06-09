@@ -1,0 +1,7 @@
+{
+  "auth_token": "test-token",
+  "id": 1,
+  "username": "testuser",
+  "full_name": "Test User",
+  "email": "test@example.com"
+}

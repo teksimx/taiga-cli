@@ -1,0 +1,19 @@
+{
+  "id": 1,
+  "name": "Demo",
+  "slug": "demo",
+  "description": "Demo project",
+  "is_private": false,
+  "us_statuses": [
+    { "id": 10, "name": "New", "slug": "new", "color": "#fff", "order": 1, "is_closed": false }
+  ],
+  "task_statuses": [
+    { "id": 20, "name": "Open", "slug": "open", "color": "#aaa", "order": 1, "is_closed": false }
+  ],
+  "issue_statuses": [],
+  "epic_statuses": [],
+  "issue_types": [{ "id": 30, "name": "Bug", "order": 1 }],
+  "priorities": [{ "id": 40, "name": "High", "order": 1 }],
+  "severities": [{ "id": 50, "name": "Critical", "order": 1 }],
+  "points": [{ "id": 60, "name": "3", "order": 1 }]
+}

@@ -1,0 +1,47 @@
+{
+  "name": "taiga-cli",
+  "version": "0.1.0",
+  "description": "CLI for Taiga project management",
+  "type": "module",
+  "bin": {
+    "taiga": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "node esbuild.config.mjs",
+    "dev": "node --import tsx src/cli.ts",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "pnpm build"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "taiga",
+    "cli",
+    "project-management"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@clack/prompts": "^0.10.1",
+    "citty": "^0.1.6",
+    "cli-table3": "^0.6.5",
+    "consola": "^3.4.2",
+    "defu": "^6.1.4",
+    "pathe": "^2.0.3",
+    "yaml": "^2.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.57",
+    "@vitest/coverage-v8": "^2.1.9",
+    "esbuild": "^0.24.2",
+    "msw": "^2.8.4",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "vitest": "^2.1.9"
+  }
+}

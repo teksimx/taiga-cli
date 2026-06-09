@@ -1,0 +1,9 @@
+[
+  {
+    "id": 1,
+    "name": "Demo",
+    "slug": "demo",
+    "description": "Demo project",
+    "is_private": false
+  }
+]
