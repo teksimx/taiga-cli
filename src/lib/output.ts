@@ -86,6 +86,99 @@ export function workItemTableRows(
   };
 }
 
+function extraInfoName(value: unknown): string | undefined {
+  if (typeof value === "object" && value !== null && "name" in value) {
+    return String((value as { name: string }).name);
+  }
+  return undefined;
+}
+
+function extraInfoDisplayName(value: unknown): string | undefined {
+  if (typeof value === "object" && value !== null && "full_name_display" in value) {
+    return String((value as { full_name_display: string }).full_name_display);
+  }
+  return undefined;
+}
+
+export function formatWorkItemTags(tags: unknown): string {
+  if (!Array.isArray(tags)) return "";
+  return tags
+    .map((tag) => (Array.isArray(tag) ? tag[0] : tag))
+    .filter((tag) => tag !== null && tag !== undefined && tag !== "")
+    .map(String)
+    .join(", ");
+}
+
+function omitEmptyFields(data: Record<string, unknown>): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(data)) {
+    if (value === null || value === undefined || value === "") continue;
+    if (Array.isArray(value) && value.length === 0) continue;
+    result[key] = value;
+  }
+  return result;
+}
+
+export function workItemSummary(item: Record<string, unknown>): Record<string, unknown> {
+  const summary: Record<string, unknown> = {
+    ref: item.ref,
+    subject: item.subject,
+    description: item.description,
+    status: extraInfoName(item.status_extra_info) ?? item.status,
+    assigned: extraInfoDisplayName(item.assigned_to_extra_info),
+    owner: extraInfoDisplayName(item.owner_extra_info),
+    project: (item.project_extra_info as { name?: string } | undefined)?.name ?? item.project,
+    milestone: item.milestone_name,
+    tags: formatWorkItemTags(item.tags),
+    is_closed: item.is_closed,
+    is_blocked: item.is_blocked,
+    due_date: item.due_date,
+    total_comments: item.total_comments,
+    total_attachments: item.total_attachments,
+    total_points: item.total_points,
+    created_date: item.created_date,
+    modified_date: item.modified_date,
+    finish_date: item.finish_date ?? item.finished_date,
+  };
+
+  const type = extraInfoName(item.type_extra_info);
+  if (type) summary.type = type;
+
+  const priority = extraInfoName(item.priority_extra_info);
+  if (priority) summary.priority = priority;
+
+  const severity = extraInfoName(item.severity_extra_info);
+  if (severity) summary.severity = severity;
+
+  const userStory = item.user_story_extra_info as { ref?: number; subject?: string } | undefined;
+  if (userStory?.ref) {
+    summary.user_story = userStory.subject
+      ? `#${userStory.ref} ${userStory.subject}`
+      : `#${userStory.ref}`;
+  }
+
+  return omitEmptyFields(summary);
+}
+
+export function workItemSummaryRows(
+  item: Record<string, unknown>,
+  options?: { truncateDescription?: number },
+): { head: string[]; rows: string[][] } {
+  const summary = workItemSummary(item);
+  const maxDescription = options?.truncateDescription ?? 300;
+
+  return {
+    head: ["Field", "Value"],
+    rows: Object.entries(summary).map(([key, value]) => {
+      let display = formatCell(value);
+      if (key === "description" && display.length > maxDescription) {
+        display = `${display.slice(0, maxDescription)}…`;
+      }
+      return [key, display];
+    }),
+  };
+}
+
 export function projectTableRows(
   projects: Array<{ id: number; slug: string; name: string; is_private: boolean }>,
 ): { head: string[]; rows: string[][] } {

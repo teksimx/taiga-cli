@@ -2,6 +2,20 @@
   "id": 100,
   "ref": 1,
   "subject": "First story",
+  "description": "Story details",
   "project": 1,
-  "status": 10
+  "status": 10,
+  "status_extra_info": { "name": "New", "color": "#fff", "is_closed": false },
+  "assigned_to_extra_info": { "full_name_display": "Dev User" },
+  "owner_extra_info": { "full_name_display": "Owner User" },
+  "project_extra_info": { "name": "Demo", "slug": "demo", "id": 1 },
+  "tags": [["bug", "#ff0000"], ["feature", "#00ff00"]],
+  "is_closed": false,
+  "total_comments": 2,
+  "total_attachments": 1,
+  "created_date": "2024-01-01T00:00:00Z",
+  "modified_date": "2024-01-02T00:00:00Z",
+  "backlog_order": 1708616110336309,
+  "assigned_to": 2,
+  "owner": 1
 }

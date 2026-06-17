@@ -26,6 +26,24 @@ describe("user-stories commands", () => {
     expect(stdout).toContain("First story");
   });
 
+  it("shows user story summary by default", async () => {
+    const showCmd = userStoriesCommand.subCommands?.show;
+    const { stdout } = await runCliCommand(showCmd!, ["1", "--project", "demo"]);
+    expect(stdout).toContain("Field");
+    expect(stdout).toContain("subject");
+    expect(stdout).toContain("First story");
+    expect(stdout).toContain("status");
+    expect(stdout).toContain("New");
+    expect(stdout).not.toContain("backlog_order");
+  });
+
+  it("shows full user story with --full", async () => {
+    const showCmd = userStoriesCommand.subCommands?.show;
+    const { stdout } = await runCliCommand(showCmd!, ["1", "--project", "demo", "--full"]);
+    expect(stdout).toContain("backlog_order");
+    expect(stdout).toContain("assigned_to");
+  });
+
   it("creates user story with subject", async () => {
     const createCmd = userStoriesCommand.subCommands?.create;
     const { stdout } = await runCliCommand(createCmd!, [

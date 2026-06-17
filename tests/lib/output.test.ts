@@ -1,8 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
+  formatWorkItemTags,
   parseFormat,
   printData,
   projectTableRows,
+  workItemSummary,
+  workItemSummaryRows,
   workItemTableRows,
 } from "../../src/lib/output.js";
 
@@ -50,5 +53,53 @@ describe("output", () => {
       },
     ]);
     expect(table.rows[0]).toEqual(["1", "Story", "New", "Dev"]);
+  });
+
+  it("formats work item tags", () => {
+    expect(formatWorkItemTags([["bug", "#f00"], ["feature", "#0f0"]])).toBe("bug, feature");
+    expect(formatWorkItemTags([])).toBe("");
+  });
+
+  it("builds work item summary from API payload", () => {
+    const summary = workItemSummary({
+      ref: 1,
+      subject: "Story",
+      description: "Details",
+      status_extra_info: { name: "New" },
+      assigned_to_extra_info: { full_name_display: "Dev" },
+      owner_extra_info: { full_name_display: "Owner" },
+      project_extra_info: { name: "Demo" },
+      tags: [["bug", "#f00"]],
+      is_closed: false,
+      total_comments: 1,
+      backlog_order: 999,
+      assigned_to: 2,
+    });
+
+    expect(summary).toEqual({
+      ref: 1,
+      subject: "Story",
+      description: "Details",
+      status: "New",
+      assigned: "Dev",
+      owner: "Owner",
+      project: "Demo",
+      tags: "bug",
+      is_closed: false,
+      total_comments: 1,
+    });
+    expect(summary).not.toHaveProperty("backlog_order");
+    expect(summary).not.toHaveProperty("assigned_to");
+  });
+
+  it("builds work item summary rows for show output", () => {
+    const table = workItemSummaryRows({
+      ref: 1,
+      subject: "Story",
+      status_extra_info: { name: "New" },
+    });
+    expect(table.head).toEqual(["Field", "Value"]);
+    expect(table.rows).toContainEqual(["ref", "1"]);
+    expect(table.rows).toContainEqual(["status", "New"]);
   });
 });

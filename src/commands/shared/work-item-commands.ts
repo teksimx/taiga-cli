@@ -1,7 +1,13 @@
 import { defineCommand } from "citty";
 import { readFileSync } from "node:fs";
 import { resolveProjectSlug } from "../../lib/context.js";
-import { printData, workItemTableRows } from "../../lib/output.js";
+import {
+  parseFormat,
+  printData,
+  workItemSummary,
+  workItemSummaryRows,
+  workItemTableRows,
+} from "../../lib/output.js";
 import { ResourceClient } from "../../lib/resources/base.js";
 import { EpicsResource, UserStoriesResource } from "../../lib/resources/work-items.js";
 import type { WorkItem, WorkItemType } from "../../types/taiga-api.js";
@@ -55,6 +61,12 @@ export function createWorkItemCommands(config: WorkItemCommandConfig) {
     args: {
       ref: { type: "positional", description: "Ref or ID", required: true },
       project: { type: "string", alias: "p" },
+      full: {
+        type: "boolean",
+        default: false,
+        description: "Show full API response instead of summary",
+      },
+      format: { type: "string", alias: "f", default: "table" },
     },
     async run({ args }) {
       await withContext(args as Record<string, unknown>, async (ctx) => {
@@ -65,7 +77,17 @@ export function createWorkItemCommands(config: WorkItemCommandConfig) {
           supportsRef: true,
         });
         const item = await resource.resolve(args.ref as string, project.id);
-        printData(item, ctx.flags);
+        if (args.full) {
+          printData(item, ctx.flags);
+          return;
+        }
+
+        const raw = item as Record<string, unknown>;
+        if (parseFormat(ctx.flags.format) === "table") {
+          printData(item, ctx.flags, workItemSummaryRows(raw));
+        } else {
+          printData(workItemSummary(raw), ctx.flags);
+        }
       });
     },
   });
