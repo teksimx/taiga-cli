@@ -10,7 +10,7 @@ CLI en TypeScript para interactuar con instancias [Taiga](https://taiga.io) (clo
 ## Instalación
 
 ```bash
-npm install -g taiga-cli
+npm install -g @teksi/taiga-cli
 ```
 
 Desarrollo local:

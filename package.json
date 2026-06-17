@@ -1,10 +1,18 @@
 {
-  "name": "taiga-cli",
+  "name": "@teksi/taiga-cli",
   "version": "0.1.0",
   "description": "CLI for Taiga project management",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teksimx/taiga-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/teksimx/taiga-cli/issues"
+  },
+  "homepage": "https://github.com/teksimx/taiga-cli#readme",
   "type": "module",
   "bin": {
-    "taiga": "./dist/cli.js"
+    "taiga": "dist/cli.js"
   },
   "files": [
     "dist"
@@ -26,6 +34,10 @@
     "project-management"
   ],
   "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "dependencies": {
     "@clack/prompts": "^0.10.1",
     "citty": "^0.1.6",
